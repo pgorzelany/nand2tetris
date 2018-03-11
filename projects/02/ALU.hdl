@@ -7,7 +7,7 @@
  * The ALU (Arithmetic Logic Unit).
  * Computes one of the following functions:
  * x+y, x-y, y-x, 0, 1, -1, x, y, -x, -y, !x, !y,
- * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs, 
+ * x+1, y+1, x-1, y-1, x&y, x|y on two 16-bit inputs,
  * according to 6 input bits denoted zx,nx,zy,ny,f,no.
  * In addition, the ALU computes two 1-bit outputs:
  * if the ALU output == 0, zr is set to 1; otherwise zr is set to 0;
@@ -27,8 +27,8 @@
 // if (out < 0) set ng = 1
 
 CHIP ALU {
-    IN  
-        x[16], y[16],  // 16-bit inputs        
+    IN
+        x[16], y[16],  // 16-bit inputs
         zx, // zero the x input?
         nx, // negate the x input?
         zy, // zero the y input?
@@ -36,11 +36,42 @@ CHIP ALU {
         f,  // compute out = x + y (if 1) or x & y (if 0)
         no; // negate the out output?
 
-    OUT 
+    OUT
         out[16], // 16-bit output
         zr, // 1 if (out == 0), 0 otherwise
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    If16(a=false, b=x, cond=zx, out=zxOut);
+    Not16(in=zxOut, out=notX);
+    If16(a=notX, b=zxOut, cond=nx, out=nxOut);
+
+    If16(a=false, b=y, cond=zy, out=zyOut);
+    Not16(in=zyOut, out=notY);
+    If16(a=notY, b=zyOut, cond=ny, out=nyOut);
+
+    Add16(a=nxOut, b=nyOut, out=addOut);
+    And16(a=nxOut, b=nyOut, out=andOut);
+    If16(a=addOut, b=andOut, cond=f, out=fOut);
+
+    Not16(in=fOut, out=notFOut);
+    If16(a=notFOut, b=fOut, cond=no, out=out, out[15]=ng, out[0]=out0, out[1]=out1, out[2]=out2, out[3]=out3, out[4]=out4, out[5]=out5, out[6]=out6, out[7]=out7, out[8]=out8, out[9]=out9, out[10]=out10, out[11]=out11, out[12]=out12, out[13]=out13, out[14]=out14, out[15]=out15);
+
+    Or(a=out0, b=out1, out=temp1);
+    Or(a=temp1, b=out2, out=temp2);
+    Or(a=temp2, b=out3, out=temp3);
+    Or(a=temp3, b=out4, out=temp4);
+    Or(a=temp4, b=out5, out=temp5);
+    Or(a=temp5, b=out6, out=temp6);
+    Or(a=temp6, b=out7, out=temp7);
+    Or(a=temp7, b=out8, out=temp8);
+    Or(a=temp8, b=out9, out=temp9);
+    Or(a=temp9, b=out10, out=temp10);
+    Or(a=temp10, b=out11, out=temp11);
+    Or(a=temp11, b=out12, out=temp12);
+    Or(a=temp12, b=out13, out=temp13);
+    Or(a=temp13, b=out14, out=temp14);
+    Or(a=temp14, b=out5, out=temp15);
+    Not(in=temp15, out=zr);
+
 }

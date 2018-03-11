@@ -1,0 +1,13 @@
+/**
+ * If:
+ * out = a if cond == 1
+ *       b otherwise
+ */
+
+CHIP If16 {
+    IN a[16], b[16], cond;
+    OUT out[16];
+
+    PARTS:
+    Mux16(a=b, b=a, sel=cond, out=out);
+}
