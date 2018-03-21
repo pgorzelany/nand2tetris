@@ -16,5 +16,18 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Load Register
+    Register(in=in, load=load, out=loadOut);
+
+    // Reset Register
+    Register(in=false, load=reset, out=resetOut);
+
+    // NoOp Register
+    Register(in=out, load=true, out=noOpOut);
+
+    // Increment operation
+    Inc16(in=out, out=incrementOut);
+
+    If16(cond=inc, then=incrementOut, else=noOpOut, out=out)
+
 }
