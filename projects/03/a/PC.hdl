@@ -16,18 +16,17 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Load Register
-    Register(in=in, load=load, out=loadOut);
+    Inc16(in=registerOut, out=incOut);
 
-    // Reset Register
-    Register(in=false, load=reset, out=resetOut);
+    // Calculate load
+    Or(a=reset, b=load, out=orOut1);
+    Or(a=orOut1, b=inc, out=loadOut);
 
-    // NoOp Register
-    Register(in=out, load=true, out=noOpOut);
+    // Calculate value that should be propagated as in
+    Mux16(a=registerOut, b=incOut, sel=inc, out=temp1);
+    Mux16(a=temp1, b=in, sel=load, out=temp2);
+    Mux16(a=temp2, b=false, sel=reset, out=temp3);
 
-    // Increment operation
-    Inc16(in=out, out=incrementOut);
-
-    If16(cond=inc, then=incrementOut, else=noOpOut, out=out)
-
+    // Feed the final register
+    Register(in=temp3, load=loadOut, out=out, out=registerOut);
 }
