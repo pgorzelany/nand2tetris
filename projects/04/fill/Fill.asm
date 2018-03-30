@@ -44,7 +44,7 @@
   @i
   M=D // At the beggining we have 8192 iterations left
 
-  @current_screen_register // holds the address of the current screen register
+  @current_iteration // holds the address of the current screen register
   M=0 // We start at register 0
 
   (loop)
@@ -56,13 +56,22 @@
     D;JEQ
 
     // If its not equal assign the value under pixel_register to current_screen_register
+    @SCREEN
+    D=A
+    @current_iteration
+    D=D+M
+    @current_pixel_address
+    M=D // current_pixel_address now holds the memory address that should be filled
+
     @pixel_register
     D=M
-    @SCREEN
-    M=D
 
-    // Increment current_screen_register
-    @current_screen_register
+    @current_pixel_address
+    A=M // set the current address to the pixel address stored in memory
+    M=D // set pixel color
+
+    // Increment iteration
+    @current_iteration
     M=M+1
 
     // Decrement current loop index
