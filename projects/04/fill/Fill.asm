@@ -64,7 +64,7 @@
     M=D // current_pixel_address now holds the memory address that should be filled
 
     @pixel_register
-    D=M
+    D=M // store pixel color in D
 
     @current_pixel_address
     A=M // set the current address to the pixel address stored in memory
