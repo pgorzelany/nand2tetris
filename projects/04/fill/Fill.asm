@@ -39,11 +39,13 @@
   // Paints the whole screen with colors as defined in pixel_register
 
   // The screen holds 8192 registers and we need to iterate over all of them
-  @i // address of the number of left iterations
-  M=8192 // At the beggining we have 8192 iterations left
+  @8192 // address of the number of left iterations
+  D=A
+  @i
+  M=D // At the beggining we have 8192 iterations left
 
   @current_screen_register // holds the address of the current screen register
-  M=@SCREEN // Assign the first screen register to the current_screen_register
+  M=0 // We start at register 0
 
   (loop)
 
@@ -54,14 +56,23 @@
     D;JEQ
 
     // If its not equal assign the value under pixel_register to current_screen_register
-    @pixel_register
+    @SCREEN
     D=M
     @current_screen_register
-    M=D
+    A=D+M
+    M=-1
 
     // Increment current_screen_register
     @current_screen_register
     M=M+1
+
+    // Decrement current loop index
+    @i
+    M=M-1
+
+    // Loop
+    @loop
+    0;JMP
 
   (finish)
     // Finish and go back to checking keyboard
