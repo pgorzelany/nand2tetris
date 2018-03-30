@@ -56,11 +56,10 @@
     D;JEQ
 
     // If its not equal assign the value under pixel_register to current_screen_register
-    @SCREEN
+    @pixel_register
     D=M
-    @current_screen_register
-    A=D+M
-    M=-1
+    @SCREEN
+    M=D
 
     // Increment current_screen_register
     @current_screen_register
