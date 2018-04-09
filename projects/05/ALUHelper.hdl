@@ -12,7 +12,8 @@ CHIP ALUHelper {
     OUT out;
 
     PARTS:
-    Not(in=isNegative, out=isPositive);
+    Or(a=isZero, b=isNegative, out=isZeroOrNegative);
+    Not(in=isZeroOrNegative, out=isPositive);
     And(a=jumpNegative, b=isNegative, out=shouldJumpNegative);
     And(a=jumpZero, b=isZero, out=shouldJumpZero);
     And(a=jumpPositive, b=isPositive, out=shouldJumpPositive);
