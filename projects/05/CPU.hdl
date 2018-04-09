@@ -57,8 +57,8 @@ CHIP CPU {
     ALU(x=dRegisterOut, y=mux2Out, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=aluOut, out=outM, zr=aluZeroOut, ng=aluNegativeOut);
 
     // The D register
-    
-    DRegister(in=aluOut, load=instruction[4], out=dRegisterOut);
+    And(a=instruction[4], b=instruction[15], out=loadDRegister); // Only load the D register if its a C instruction and d2 destination bit is asserted
+    DRegister(in=aluOut, load=loadDRegister, out=dRegisterOut);
 
 
     // Determine writeM
