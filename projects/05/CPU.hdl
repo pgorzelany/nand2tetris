@@ -62,7 +62,7 @@ CHIP CPU {
 
     // The program counter
     // We need to find out if we should assert jump
-    ALUHelper(jumpNegative=instruction[2], jumpZero=instruction[1], jumpPositive=instruction[0], isZero=aluZeroOut, isNegative=aluNegativeOut, isCInstruction=instruction[15] out=jump);
+    ALUHelper(jumpNegative=instruction[2], jumpZero=instruction[1], jumpPositive=instruction[0], isZero=aluZeroOut, isNegative=aluNegativeOut, isCInstruction=instruction[15], out=jump);
     Not(in=jump, out=increment);
     PC(in=aRegisterOut, load=jump, inc=increment, reset=reset);
 }
