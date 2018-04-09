@@ -6,7 +6,8 @@ CHIP ALUHelper {
         jumpZero,
         jumpPositive,
         isZero,
-        isNegative;
+        isNegative,
+        isCInstruction;
 
     OUT out;
 
@@ -16,5 +17,6 @@ CHIP ALUHelper {
     And(a=jumpZero, b=isZero, out=shouldJumpZero);
     And(a=jumpPositive, b=isPositive, out=shouldJumpPositive);
     Or(a=shouldJumpNegative, b=shouldJumpZero, out=temp);
-    Or(a=temp, b=shouldJumpPositive, out=out);
+    Or(a=temp, b=shouldJumpPositive, out=shouldJump);
+    And(a=shouldJump, b=isCInstruction, out=out);
 }

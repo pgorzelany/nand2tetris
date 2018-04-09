@@ -44,7 +44,7 @@ CHIP CPU {
     Mux16(a=instruction, b=aluOut, sel=instruction[15], out=mux1Out);
 
     // The A register
-    ARegister(in=mux1Out, load=instruction[5], out[1..15]=addressM, out=aRegisterOut);
+    ARegister(in=mux1Out, load=instruction[5], out[0..14]=addressM, out=aRegisterOut);
 
     // Determine if the ALU should operate on the A or M register
     // If a is 0 than we should use the D register, if its 1 we should use M
@@ -58,11 +58,11 @@ CHIP CPU {
 
 
     // Determine writeM
-    And(a=instruction[3], b=true, out=writeM);
+    //And(a=instruction[3], b=false, out=writeM); // this needs to be fixed
 
     // The program counter
     // We need to find out if we should assert jump
-    ALUHelper(jumpNegative=instruction[2], jumpZero=instruction[1], jumpPositive=instruction[0], isZero=aluZeroOut, isNegative=aluNegativeOut, out=jump);
+    ALUHelper(jumpNegative=instruction[2], jumpZero=instruction[1], jumpPositive=instruction[0], isZero=aluZeroOut, isNegative=aluNegativeOut, isCInstruction=instruction[15] out=jump);
     Not(in=jump, out=increment);
     PC(in=aRegisterOut, load=jump, inc=increment, reset=reset);
 }
