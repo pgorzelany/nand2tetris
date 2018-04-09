@@ -1,0 +1,20 @@
+// Determines if the alu should be loaded with the current memory address and jump
+
+CHIP ALUHelper {
+
+    IN  jumpNegative,
+        jumpZero,
+        jumpPositive,
+        isZero,
+        isNegative;
+
+    OUT out;
+
+    PARTS:
+    Not(in=isNegative, out=isPositive);
+    And(a=jumpNegative, b=isNegative, out=shouldJumpNegative);
+    And(a=jumpZero, b=isZero, out=shouldJumpZero);
+    And(a=jumpPositive, b=isPositive, out=shouldJumpPositive);
+    Or(a=shouldJumpNegative, b=shouldJumpZero, out=temp);
+    Or(a=temp, b=shouldJumpPositive, out=out);
+}
