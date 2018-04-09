@@ -44,8 +44,10 @@ CHIP CPU {
     Mux16(a=instruction, b=aluOut, sel=instruction[15], out=mux1Out);
 
     // The A register
-    Or(a=instruction[5], b=instruction[15], out=loadARegister); // Only load the A register if its an A instruction or a C instruction with A register destination
-    ARegister(in=mux1Out, load=instruction[5], out[0..14]=addressM, out=aRegisterOut);
+    Not(in=instruction[15], out=isAInstruction);
+    And(a=instruction[5], b=instruction[15], out=loadARegisterFromCInstruction);
+    Or(a=isAInstruction, b=loadARegisterFromCInstruction, out=loadARegister); // Only load the A register if its an A instruction or a C instruction with A register destination
+    ARegister(in=mux1Out, load=loadARegister, out[0..14]=addressM, out=aRegisterOut);
 
     // Determine if the ALU should operate on the A or M register
     // If a is 0 than we should use the D register, if its 1 we should use M
@@ -55,6 +57,7 @@ CHIP CPU {
     ALU(x=dRegisterOut, y=mux2Out, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=aluOut, out=outM, zr=aluZeroOut, ng=aluNegativeOut);
 
     // The D register
+    
     DRegister(in=aluOut, load=instruction[4], out=dRegisterOut);
 
 
